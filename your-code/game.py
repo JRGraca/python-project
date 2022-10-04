@@ -21,8 +21,25 @@ piano = {
     "type": "furniture",
 }
 
+#list rooms
+
 game_room = {
     "name": "game room",
+    "type": "room",
+}
+
+bedroom_1 = {
+    "name": "Bedroom 1",
+    "type": "room",
+}
+
+bedroom_2 = {
+    "name": "Bedroom 2",
+    "type": "room",
+}
+
+living_room = {
+    "name": "living room",
     "type": "room",
 }
 
@@ -53,9 +70,43 @@ key_b = {
     "target": door_b,
 }
 
-#list items for bedroom 2
+#list items for living room
+
+dining_table = {
+    "name": "dining table",
+    "type": "furniture"
+}
+
+door_d = {
+    "name": "door d",
+    "type": "door"
+}
 
 #list items for bedroom 2
+
+double_bed = {
+    "name": "double bed",
+    "type": "furniture"
+}
+
+dresser = {
+    "name": "dresser",
+    "type": "furniture"
+}
+
+key_c = {
+    "name": "Key for Door C",
+    "type": "key",
+    "target": door_c
+}
+
+key_d = {
+    "name": "key for door d",
+    "type": "key",
+    "target": door_d
+}
+
+
 
 
 all_rooms = [game_room, bedroom_1, bedroom_2, living_room, outside]
@@ -67,8 +118,18 @@ all_doors = [door_a, door_b, door_c, door_d]
 object_relations = {
     "game room": [couch, piano, door_a],
     "piano": [key_a],
-    "outside": [door_a],
-    "door a": [game_room, outside]
+    "outside": [door_d],
+    "door a": [game_room, bedroom_1],
+    "Bedroom 1": [queen_bed, door_b, door_c],
+    "door b": [bedroom_1, bedroom_2],
+    "queen bed": [key_b],
+    "double bed": [key_c],
+    "dresser": [key_d],
+    "door c": [bedroom_1, living_room],
+    "Bedroom 2": [double_bed, dresser, door_b],
+    "living room": [dining_table, door_c, door_d],
+    "door d": [living_room, outside],
+    "dining table": []
 }
 
 # define game state. Do not directly change this dict. 
@@ -147,7 +208,7 @@ def examine_item(item_name):
     current_room = game_state["current_room"]
     next_room = ""
     output = None
-    
+
     for item in object_relations[current_room["name"]]:
         if(item["name"] == item_name):
             output = "You examine " + item_name + ". "
