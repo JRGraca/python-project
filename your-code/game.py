@@ -1,3 +1,5 @@
+#list items in game room
+
 couch = {
     "name": "couch",
     "type": "furniture",
@@ -28,9 +30,37 @@ outside = {
   "name": "outside"
 }
 
-all_rooms = [game_room, outside]
+#list items in bedroom 1
 
-all_doors = [door_a]
+queen_bed = {
+    "name": "queen bed",
+    "type": "furniture"
+}
+
+door_b = {
+    "name": "door b",
+    "type": "door"
+}
+
+door_c = {
+    "name": "door c",
+    "type": "door"
+}
+
+key_b = {
+    "name": "key for door b",
+    "type": "key",
+    "target": door_b,
+}
+
+#list items for bedroom 2
+
+#list items for bedroom 2
+
+
+all_rooms = [game_room, bedroom_1, bedroom_2, living_room, outside]
+
+all_doors = [door_a, door_b, door_c, door_d]
 
 # define which items/rooms are related
 
