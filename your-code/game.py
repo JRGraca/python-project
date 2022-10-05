@@ -1,4 +1,4 @@
-# import playsound
+import playsound
 
 #list items in game room
 
@@ -119,7 +119,7 @@ object_relations = {
     "piano": [key_a],
     "outside": [door_d],
     "door a": [game_room, bedroom_1],
-    "Bedroom 1": [queen_bed, door_b, door_c],
+    "Bedroom 1": [queen_bed, door_a, door_b, door_c],
     "door b": [bedroom_1, bedroom_2],
     "queen bed": [key_b],
     "double bed": [key_c],
