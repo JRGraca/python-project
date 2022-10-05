@@ -1,3 +1,5 @@
+# import playsound
+
 #list items in game room
 
 couch = {
@@ -106,9 +108,6 @@ key_d = {
     "target": door_d
 }
 
-
-
-
 all_rooms = [game_room, bedroom_1, bedroom_2, living_room, outside]
 
 all_doors = [door_a, door_b, door_c, door_d]
@@ -129,7 +128,6 @@ object_relations = {
     "Bedroom 2": [double_bed, dresser, door_b],
     "living room": [dining_table, door_c, door_d],
     "door d": [living_room, outside],
-    "dining table": []
 }
 
 # define game state. Do not directly change this dict. 
@@ -142,6 +140,11 @@ INIT_GAME_STATE = {
     "keys_collected": [],
     "target_room": outside
 }
+
+def print_inventory():
+    for i in game_state["keys_collected"]:
+        print(i['name'])
+
 def linebreak():
     """
     Print a line break
@@ -166,12 +169,18 @@ def play_room(room):
         print("Congrats! You escaped the room!")
     else:
         print("You are now in " + room["name"])
-        intended_action = input("What would you like to do? Type 'explore' or 'examine'?").strip()
+        intended_action = input("What would you like to do? Type 'explore', 'examine' or 'inventory'?").strip()
         if intended_action == "explore":
             explore_room(room)
             play_room(room)
-        elif intended_action == "examine":
-            examine_item(input("What would you like to examine?").strip())
+        elif intended_action.startswith("examine") == True:
+            if intended_action[7:].strip() == "":
+                examine_item(input("What would you like to examine?").strip())
+            else:
+                examine_item(intended_action[7:].strip())
+        elif intended_action == 'inventory':
+            print_inventory()
+            play_room(room)
         else:
             print("Not sure what you mean. Type 'explore' or 'examine'.")
             play_room(room)
