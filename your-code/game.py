@@ -1,3 +1,25 @@
+import random
+
+def fight():
+    if random.random() < 0.95:
+        positive_result = "You win."
+        return positive_result
+    else:
+        negative_result = "You are almost there, keep fighting."
+        return negative_result
+
+valid = False
+while valid == False:
+    intended_fight = input("Would you like to fight with (item_name)? Enter 'yes' or 'no'.").strip()
+    
+    if intended_fight == "no":
+        print("Come on, be brave! Go for it!")
+    
+    else:
+        if intended_fight == "yes":
+            print(fight())
+            valid = True
+
 #list items in game room
 
 couch = {
@@ -16,9 +38,9 @@ key_a = {
     "target": door_a,
 }
 
-piano = {
-    "name": "piano",
-    "type": "furniture",
+vampire = {
+    "name": "vampire",
+    "type": "monster",
 }
 
 #list rooms
@@ -49,9 +71,9 @@ outside = {
 
 #list items in bedroom 1
 
-queen_bed = {
-    "name": "queen bed",
-    "type": "furniture"
+mummy = {
+    "name": "mummy",
+    "type": "monster"
 }
 
 door_b = {
@@ -84,14 +106,14 @@ door_d = {
 
 #list items for bedroom 2
 
-double_bed = {
-    "name": "double bed",
-    "type": "furniture"
+witch = {
+    "name": "witch",
+    "type": "monster"
 }
 
-dresser = {
-    "name": "dresser",
-    "type": "furniture"
+zombie = {
+    "name": "zombie",
+    "type": "monster"
 }
 
 key_c = {
@@ -116,20 +138,19 @@ all_doors = [door_a, door_b, door_c, door_d]
 # define which items/rooms are related
 
 object_relations = {
-    "game room": [couch, piano, door_a],
-    "piano": [key_a],
+    "game room": [couch, vampire, door_a],
+    "vampire": [key_a],
     "outside": [door_d],
     "door a": [game_room, bedroom_1],
-    "Bedroom 1": [queen_bed, door_b, door_c],
+    "Bedroom 1": [mummy, door_b, door_c],
     "door b": [bedroom_1, bedroom_2],
-    "queen bed": [key_b],
-    "double bed": [key_c],
-    "dresser": [key_d],
+    "mummy": [key_b],
+    "witch": [key_c],
+    "zombie": [key_d],
     "door c": [bedroom_1, living_room],
-    "Bedroom 2": [double_bed, dresser, door_b],
+    "Bedroom 2": [witch, zombie, door_b],
     "living room": [dining_table, door_c, door_d],
     "door d": [living_room, outside],
-    "dining table": []
 }
 
 # define game state. Do not directly change this dict. 
@@ -196,7 +217,7 @@ def get_next_room_of_door(door, current_room):
 
 def examine_item(item_name):
     """
-    Examine an item which can be a door or furniture.
+    Examine an item which can be a door or monster.
     First make sure the intended item belongs to the current room.
     Then check if the item is a door. Tell player if key hasn't been 
     collected yet. Otherwise ask player if they want to go to the next
