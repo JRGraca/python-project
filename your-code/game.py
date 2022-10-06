@@ -1,4 +1,13 @@
 import playsound
+import random
+
+def fight():
+    if random.random() < 0.85:
+        print("You win the fight")
+        return (True)
+    else:
+        print("You lost the fight, keep on trying!")
+        return("False")
 
 #list items in game room
 
@@ -233,9 +242,12 @@ def examine_item(item_name):
                     output += "It is locked but you don't have the key."
             else:
                 if(item["name"] in object_relations and len(object_relations[item["name"]])>0):
-                    item_found = object_relations[item["name"]].pop()
-                    game_state["keys_collected"].append(item_found)
-                    output += "You find " + item_found["name"] + "."
+                    if fight() == True:
+                        item_found = object_relations[item["name"]].pop()
+                        game_state["keys_collected"].append(item_found)
+                        output += "You find " + item_found["name"] + "."
+                    else:
+                        print("Don't give up!!!")
                 else:
                     output += "There isn't anything interesting about it."
             print(output)
