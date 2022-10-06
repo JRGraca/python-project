@@ -1,4 +1,5 @@
 from playsound import playsound
+import random
 
 #list items in game room
 
@@ -18,9 +19,9 @@ key_a = {
     "target": door_a,
 }
 
-piano = {
-    "name": "piano",
-    "type": "furniture",
+vampire = {
+    "name": "vampire",
+    "type": "monster",
 }
 
 #list rooms
@@ -51,9 +52,9 @@ outside = {
 
 #list items in bedroom 1
 
-queen_bed = {
-    "name": "queen bed",
-    "type": "furniture"
+mummy = {
+    "name": "mummy",
+    "type": "monster"
 }
 
 door_b = {
@@ -86,14 +87,14 @@ door_d = {
 
 #list items for bedroom 2
 
-double_bed = {
-    "name": "double bed",
-    "type": "furniture"
+witch = {
+    "name": "witch",
+    "type": "monster"
 }
 
-dresser = {
-    "name": "dresser",
-    "type": "furniture"
+zombie = {
+    "name": "zombie",
+    "type": "monster"
 }
 
 key_c = {
@@ -108,9 +109,6 @@ key_d = {
     "target": door_d
 }
 
-
-
-
 all_rooms = [game_room, bedroom_1, bedroom_2, living_room, outside]
 
 all_doors = [door_a, door_b, door_c, door_d]
@@ -118,20 +116,19 @@ all_doors = [door_a, door_b, door_c, door_d]
 # define which items/rooms are related
 
 object_relations = {
-    "game room": [couch, piano, door_a],
-    "piano": [key_a],
+    "game room": [couch, vampire, door_a],
+    "vampire": [key_a],
     "outside": [door_d],
     "door a": [game_room, bedroom_1],
-    "Bedroom 1": [queen_bed, door_b, door_c],
+    "Bedroom 1": [mummy, door_a, door_b, door_c],
     "door b": [bedroom_1, bedroom_2],
-    "queen bed": [key_b],
-    "double bed": [key_c],
-    "dresser": [key_d],
+    "mummy": [key_b],
+    "witch": [key_c],
+    "zombie": [key_d],
     "door c": [bedroom_1, living_room],
-    "Bedroom 2": [double_bed, dresser, door_b],
+    "Bedroom 2": [witch, zombie, door_b],
     "living room": [dining_table, door_c, door_d],
     "door d": [living_room, outside],
-    "dining table": []
 }
 
 # define game state. Do not directly change this dict. 
@@ -144,6 +141,11 @@ INIT_GAME_STATE = {
     "keys_collected": [],
     "target_room": outside
 }
+
+def print_inventory():
+    for i in game_state["keys_collected"]:
+        print(i['name'])
+
 def linebreak():
     """
     Print a line break
@@ -157,6 +159,14 @@ def start_game():
     print("You wake up on a couch and find yourself in a strange house with no windows which you have never been to before. You don't remember why you are here and what had happened before. You feel some unknown danger is approaching and you must get out of the house, NOW!")
     play_room(game_state["current_room"])
 
+def fight():
+    if random.random() < 0.75:
+        positive_result = "You win."
+        return positive_result
+    else:
+        negative_result = "You are almost there, keep fighting."
+        return negative_result
+
 def play_room(room):
     """
     Play a room. First check if the room being played is the target room.
@@ -168,12 +178,18 @@ def play_room(room):
         print("Congrats! You escaped the room!")
     else:
         print("You are now in " + room["name"])
-        intended_action = input("What would you like to do? Type 'explore' or 'examine'?").strip()
+        intended_action = input("What would you like to do? Type 'explore', 'examine' or 'inventory'?").strip()
         if intended_action == "explore":
             explore_room(room)
             play_room(room)
-        elif intended_action == "examine":
-            examine_item(input("What would you like to examine?").strip())
+        elif intended_action.startswith("examine") == True:
+            if intended_action[7:].strip() == "":
+                examine_item(input("What would you like to examine?").strip())
+            else:
+                examine_item(intended_action[7:].strip())
+        elif intended_action == 'inventory':
+            print_inventory()
+            play_room(room)
         else:
             print("Not sure what you mean. Type 'explore' or 'examine'.")
             play_room(room)
@@ -204,7 +220,7 @@ def open_door_sound():
 
 def examine_item(item_name):
     """
-    Examine an item which can be a door or furniture.
+    Examine an item which can be a door or monster.
     First make sure the intended item belongs to the current room.
     Then check if the item is a door. Tell player if key hasn't been 
     collected yet. Otherwise ask player if they want to go to the next
@@ -232,9 +248,22 @@ def examine_item(item_name):
                     output += "It is locked but you don't have the key."
             else:
                 if(item["name"] in object_relations and len(object_relations[item["name"]])>0):
-                    item_found = object_relations[item["name"]].pop()
-                    game_state["keys_collected"].append(item_found)
-                    output += "You find " + item_found["name"] + "."
+                    valid = False
+                    while valid == False:
+                        intended_fight = input("Would you like to fight with " + item["name"] + "? Enter 'yes' or 'no'.").strip()   
+                        if intended_fight == "no":
+                            print("Come on, be brave! Go for it!")   
+                        else:
+                            if intended_fight == "yes":
+                                result_fight = fight()
+                                print(result_fight)
+                                if result_fight == "You are almost there, keep fighting.":
+                                    continue 
+                                else:
+                                    valid = True
+                                    item_found = object_relations[item["name"]].pop()
+                                    game_state["keys_collected"].append(item_found)
+                                    output += "You find " + item_found["name"] + "."
                 else:
                     output += "There isn't anything interesting about it."
             print(output)
