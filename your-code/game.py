@@ -1,3 +1,5 @@
+from playsound import playsound
+
 #list items in game room
 
 couch = {
@@ -194,6 +196,12 @@ def get_next_room_of_door(door, current_room):
         if(not current_room == room):
             return room
 
+def open_door_sound():
+    """"
+    Play a sound when a door is open
+    """
+    playsound('/Users/Vivian/Desktop/Ironhack/Week1/Project/python-project/mixkit-scary-wooden-door-opening-190.wav')
+
 def examine_item(item_name):
     """
     Examine an item which can be a door or furniture.
@@ -236,9 +244,11 @@ def examine_item(item_name):
         print("The item you requested is not found in the current room.")
     
     if(next_room and input("Do you want to go to the next room? Ener 'yes' or 'no'").strip() == 'yes'):
+        open_door_sound()
         play_room(next_room)
     else:
         play_room(current_room)
 game_state = INIT_GAME_STATE.copy()
+
 
 start_game()
