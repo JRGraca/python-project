@@ -1,25 +1,5 @@
 import random
 
-def fight():
-    if random.random() < 0.95:
-        positive_result = "You win."
-        return positive_result
-    else:
-        negative_result = "You are almost there, keep fighting."
-        return negative_result
-
-valid = False
-while valid == False:
-    intended_fight = input("Would you like to fight with (item_name)? Enter 'yes' or 'no'.").strip()
-    
-    if intended_fight == "no":
-        print("Come on, be brave! Go for it!")
-    
-    else:
-        if intended_fight == "yes":
-            print(fight())
-            valid = True
-
 #list items in game room
 
 couch = {
@@ -176,6 +156,14 @@ def start_game():
     print("You wake up on a couch and find yourself in a strange house with no windows which you have never been to before. You don't remember why you are here and what had happened before. You feel some unknown danger is approaching and you must get out of the house, NOW!")
     play_room(game_state["current_room"])
 
+def fight():
+    if random.random() < 0.75:
+        positive_result = "You win."
+        return positive_result
+    else:
+        negative_result = "You are almost there, keep fighting."
+        return negative_result
+
 def play_room(room):
     """
     Play a room. First check if the room being played is the target room.
@@ -245,9 +233,22 @@ def examine_item(item_name):
                     output += "It is locked but you don't have the key."
             else:
                 if(item["name"] in object_relations and len(object_relations[item["name"]])>0):
-                    item_found = object_relations[item["name"]].pop()
-                    game_state["keys_collected"].append(item_found)
-                    output += "You find " + item_found["name"] + "."
+                    valid = False
+                    while valid == False:
+                        intended_fight = input("Would you like to fight with " + item["name"] + "? Enter 'yes' or 'no'.").strip()   
+                        if intended_fight == "no":
+                            print("Come on, be brave! Go for it!")   
+                        else:
+                            if intended_fight == "yes":
+                                result_fight = fight()
+                                print(result_fight)
+                                if result_fight == "You are almost there, keep fighting.":
+                                    continue 
+                                else:
+                                    valid = True
+                                    item_found = object_relations[item["name"]].pop()
+                                    game_state["keys_collected"].append(item_found)
+                                    output += "You find " + item_found["name"] + "."
                 else:
                     output += "There isn't anything interesting about it."
             print(output)
